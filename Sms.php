@@ -5,7 +5,7 @@
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
  */
 
-namespace sem\components\smsru;
+namespace sem\smsru;
 
 use Yii;
 use yii\base\Component;

@@ -11,7 +11,7 @@ return[
   'components' => [
       ...
       'sms' =>  [
-        'class' =>  'sem\components\smsru\Sms',
+        'class' =>  'sem\smsru\Sms',
         'api_id'=>  '<api_code_hash>',
         'oneSmsCost'=>	0.94
       ],

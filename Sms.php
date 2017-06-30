@@ -4,7 +4,6 @@
  * @copyright Copyright &copy; S.E.M. 2017-
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
  */
-
 namespace sem\smsru;
 
 use Yii;
@@ -24,6 +23,7 @@ use Zelenin\SmsRu\Response\SmsResponse;
  */
 class Sms extends Component
 {
+
     /**
      * Код успешно завершенного запроса
      */
@@ -49,7 +49,7 @@ class Sms extends Component
      */
     public function init()
     {
-	$this->_client = new Api(new ApiIdAuth($this->api_id));
+        $this->_client = new Api(new ApiIdAuth($this->api_id));
     }
 
     /**
@@ -59,14 +59,14 @@ class Sms extends Component
      */
     public function haveMoney()
     {
-	$have = false;
+        $have = false;
 
-	$smsBalance = $this->_client->myBalance();
-	if ($smsBalance->code == self::RESPONSE_SUCCESS_CODE && $smsBalance->balance >= ($this->oneSmsCost * 3)) {
-	    $have = true;
-	}
-	
-	return $have;
+        $smsBalance = $this->_client->myBalance();
+        if ($smsBalance->code == self::RESPONSE_SUCCESS_CODE && $smsBalance->balance >= ($this->oneSmsCost * 3)) {
+            $have = true;
+        }
+
+        return $have;
     }
 
     /**
@@ -78,20 +78,20 @@ class Sms extends Component
      */
     public function send($phone, $message)
     {
-	if (YII_DEBUG) {
-	    $response = new SmsResponse(self::RESPONSE_SUCCESS_CODE);
-	    $response->ids = [
-		rand(1, 9999)
-	    ];
-	    Yii::info(Json::encode([
-		'phone' => $phone,
-		'message' => $message
-	    ]));
-	} else {
-	    $response = $this->_client->smsSend(new BasicSms($phone, $message));
-	}
+        if (YII_DEBUG) {
+            $response = new SmsResponse(self::RESPONSE_SUCCESS_CODE);
+            $response->ids = [
+                rand(1, 9999)
+            ];
+            Yii::info(Json::encode([
+                    'phone' => $phone,
+                    'message' => $message
+            ]));
+        } else {
+            $response = $this->_client->smsSend(new BasicSms($phone, $message));
+        }
 
-	return $response;
+        return $response;
     }
 
     /**
@@ -102,25 +102,24 @@ class Sms extends Component
      */
     public function sendPool($batch)
     {
-	$pool = [];
-	foreach ($batch as $info) {
-	    $pool[] = new BasicSms($info['phone'], $info['message']);
-	}
+        $pool = [];
+        foreach ($batch as $info) {
+            $pool[] = new BasicSms($info['phone'], $info['message']);
+        }
 
-	if (YII_DEBUG) {
-	    $response = new SmsResponse(self::RESPONSE_SUCCESS_CODE);
-	    $idx = rand(1, 9999);
-	    $smses = [];
-	    foreach ($batch as $sms) {
-		$response->ids[] = $idx ++;
-		$smses[] = $info;
-	    }
-	    Yii::info(Json::encode($smses));
-	} else {
-	    $response = $this->_client->smsSend(new BasicPoolSms($pool));
-	}
+        if (YII_DEBUG) {
+            $response = new SmsResponse(self::RESPONSE_SUCCESS_CODE);
+            $idx = rand(1, 9999);
+            $smses = [];
+            foreach ($batch as $sms) {
+                $response->ids[] = $idx ++;
+                $smses[] = $info;
+            }
+            Yii::info(Json::encode($smses));
+        } else {
+            $response = $this->_client->smsSend(new BasicPoolSms($pool));
+        }
 
-	return $response;
+        return $response;
     }
-
 }

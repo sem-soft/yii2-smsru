@@ -1,7 +1,7 @@
 {
     "name": "sem-soft/yii2-smsru",
     "description": "Yii2 component for sending SMS messages via SMS.RU service",
-    "license": "BSD 3-Clause",
+    "license": "BSD-3-Clause",
     "type": "yii2-components",
     "require": {
         "php": ">=5.4.0",

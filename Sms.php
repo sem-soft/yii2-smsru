@@ -11,6 +11,7 @@ use yii\base\Component;
 use yii\helpers\Json;
 use Zelenin\SmsRu\Api;
 use Zelenin\SmsRu\Auth\ApiIdAuth;
+use Zelenin\SmsRu\Client\Client;
 use Zelenin\SmsRu\Entity\Sms as BasicSms;
 use Zelenin\SmsRu\Entity\SmsPool as BasicPoolSms;
 use Zelenin\SmsRu\Response\SmsResponse;
@@ -40,6 +41,11 @@ class Sms extends Component
     public $oneSmsCost = 1.00;
 
     /**
+     * @var array дополнительная конфигурация для Guzzle-клиента
+     */
+    public $config = [];
+
+    /**
      * @var \Zelenin\SmsRu\Api объект, предназначенный для работы с сервисом SMS.RU
      */
     protected $_client;
@@ -50,6 +56,7 @@ class Sms extends Component
     public function init()
     {
         $this->_client = new Api(new ApiIdAuth($this->api_id));
+        $this->_client->setClient(new Client($this->config));
     }
 
     /**

@@ -48,27 +48,27 @@ class Sms extends Component
     /**
      * @var \Zelenin\SmsRu\Api объект, предназначенный для работы с сервисом SMS.RU
      */
-    protected $_client;
+    protected $client;
 
     /**
      * @inheritDoc
      */
     public function init()
     {
-        $this->_client = new Api(new ApiIdAuth($this->api_id));
-        $this->_client->setClient(new Client($this->config));
+        $this->client = new Api(new ApiIdAuth($this->api_id));
+        $this->client->setClient(new Client($this->config));
     }
 
     /**
      * Проверяет наличие положительного баланса для отправки хотябы трех SMS стандартной длины
-     * 
+     * @deprecated
      * @return boolean
      */
     public function haveMoney()
     {
         $have = false;
 
-        $smsBalance = $this->_client->myBalance();
+        $smsBalance = $this->client->myBalance();
         if ($smsBalance->code == self::RESPONSE_SUCCESS_CODE && $smsBalance->balance >= ($this->oneSmsCost * 3)) {
             $have = true;
         }
@@ -78,10 +78,11 @@ class Sms extends Component
 
     /**
      * Производит отправку SMS-сообщения
-     * 
+     *
      * @param string $phone
      * @param string $message
      * @return \Zelenin\SmsRu\Response\SmsResponse
+     * @throws \Zelenin\SmsRu\Exception\Exception
      */
     public function send($phone, $message)
     {
@@ -95,7 +96,7 @@ class Sms extends Component
                     'message' => $message
             ]));
         } else {
-            $response = $this->_client->smsSend(new BasicSms($phone, $message));
+            $response = $this->client->smsSend(new BasicSms($phone, $message));
         }
 
         return $response;
@@ -103,9 +104,10 @@ class Sms extends Component
 
     /**
      * Производит отправку нескольких SMS-сообщений
-     * 
+     *
      * @param array $batch массив с информацией об отправляемых SMS-сообщениях
      * @return \Zelenin\SmsRu\Response\SmsResponse
+     * @throws \Zelenin\SmsRu\Exception\Exception
      */
     public function sendPool($batch)
     {
@@ -124,7 +126,7 @@ class Sms extends Component
             }
             Yii::info(Json::encode($smses));
         } else {
-            $response = $this->_client->smsSend(new BasicPoolSms($pool));
+            $response = $this->client->smsSend(new BasicPoolSms($pool));
         }
 
         return $response;
